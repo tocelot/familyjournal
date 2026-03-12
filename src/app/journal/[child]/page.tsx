@@ -209,13 +209,13 @@ export default function TimelinePage() {
                 onClick={() => router.push(`/journal/${child}/${entry.id}`)}
                 className={`group flex cursor-pointer flex-col overflow-hidden rounded-[20px] bg-white shadow-[0_6px_24px_#1A1A1A0A] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_12px_32px_#1A1A1A14] ${
                   hasPhoto
-                    ? `md:h-[420px] ${photoOnRight ? "md:flex-row-reverse" : "md:flex-row"}`
+                    ? `${photoOnRight ? "md:flex-row-reverse" : "md:flex-row"}`
                     : ""
                 }`}
               >
                 {/* Photo area */}
                 {hasPhoto && (
-                  <div className="relative h-[200px] overflow-hidden md:h-full md:flex-1">
+                  <div className="relative overflow-hidden md:flex-1">
                     {entry.thumbnail_media_type === "video" ? (
                       <video
                         src={entry.thumbnail_url!}
@@ -223,7 +223,7 @@ export default function TimelinePage() {
                         loop
                         playsInline
                         preload="metadata"
-                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        className="w-full object-contain transition-transform duration-300 group-hover:scale-105"
                         ref={(el) => {
                           if (!el) return;
                           const observer = new IntersectionObserver(
@@ -243,7 +243,7 @@ export default function TimelinePage() {
                       <img
                         src={entry.thumbnail_url!}
                         alt=""
-                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        className="w-full object-contain transition-transform duration-300 group-hover:scale-105"
                       />
                     )}
                     {entry.photo_count > 1 && (
@@ -259,10 +259,10 @@ export default function TimelinePage() {
                   </div>
                 )}
 
-                {/* Content area */}
+                {/* Content area — compact on mobile */}
                 <div
-                  className={`flex flex-col justify-center gap-4 p-6 md:p-8 ${
-                    hasPhoto ? "md:w-[400px] md:min-w-[400px]" : ""
+                  className={`flex flex-col justify-center gap-1 px-4 py-3 md:gap-4 md:p-8 ${
+                    hasPhoto ? "md:w-[400px] md:min-w-[400px]" : "p-6"
                   }`}
                 >
                   <span className="text-xs font-medium uppercase tracking-[1px] text-[#D4916E]">
@@ -270,21 +270,10 @@ export default function TimelinePage() {
                   </span>
 
                   {entry.description && (
-                    <p className="text-[15px] leading-[1.6] text-[#3D3D3D]">
-                      {truncate(entry.description, 200)}
+                    <p className="truncate text-sm text-[#3D3D3D] md:text-[15px] md:leading-[1.6] md:[display:-webkit-box] md:[-webkit-line-clamp:3] md:[-webkit-box-orient:vertical] md:[white-space:normal]">
+                      {entry.description}
                     </p>
                   )}
-
-                  <div className="flex items-center gap-4 text-[13px]">
-                    <span className="font-medium text-[#D4916E]">Edit</span>
-                    <span className="text-[#C5BEB6]">&middot;</span>
-                    <button
-                      onClick={(e) => handleDelete(entry.id, e)}
-                      className="text-[#C5BEB6] transition-colors hover:text-red-400"
-                    >
-                      Delete
-                    </button>
-                  </div>
                 </div>
               </div>
             );

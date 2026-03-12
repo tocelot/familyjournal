@@ -120,7 +120,7 @@ export default function EntryDetailPage() {
     return (
       <div className="animate-pulse">
         <div className="h-4 w-48 rounded bg-[#E8E0D6]" />
-        <div className="mt-6 h-[300px] rounded-[20px] bg-[#E8E0D6] md:h-[480px]" />
+        <div className="mt-6 aspect-[4/3] rounded-[20px] bg-[#E8E0D6]" />
         <div className="max-w-[680px] space-y-4 pt-8">
           <div className="h-3 w-40 rounded bg-[#E8E0D6]" />
           <div className="h-6 w-64 rounded bg-[#E8E0D6]" />
@@ -169,7 +169,7 @@ export default function EntryDetailPage() {
           {entry.photos.map((photo, i) => (
             <div
               key={photo.id}
-              className="relative h-[300px] overflow-hidden rounded-[20px] md:h-[480px]"
+              className="relative overflow-hidden rounded-[20px]"
             >
               {photo.media_type === "video" ? (
                 <video
@@ -177,17 +177,17 @@ export default function EntryDetailPage() {
                   controls
                   playsInline
                   preload="metadata"
-                  className="h-full w-full object-cover"
+                  className="w-full rounded-[20px] object-contain"
                 />
               ) : (
                 <button
                   onClick={() => setLightboxIndex(i)}
-                  className="block h-full w-full cursor-pointer"
+                  className="block w-full cursor-pointer"
                 >
                   <img
                     src={photo.blob_url}
                     alt=""
-                    className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+                    className="w-full object-contain transition-transform duration-300 hover:scale-105"
                   />
                 </button>
               )}
