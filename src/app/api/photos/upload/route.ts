@@ -1,3 +1,5 @@
+export const maxDuration = 30;
+
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
 import { entries, photos } from "@/db/schema";
