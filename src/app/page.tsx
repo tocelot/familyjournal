@@ -44,10 +44,7 @@ async function getJournalInfo(): Promise<JournalInfo[]> {
 
   try {
     for (const journal of journals) {
-      const condition =
-        journal.child === "family"
-          ? eq(entries.child, "family")
-          : or(eq(entries.child, journal.child), eq(entries.child, "family"));
+      const condition = eq(entries.child, journal.child);
 
       const [countResult] = await db
         .select({ count: sql<number>`count(*)` })
