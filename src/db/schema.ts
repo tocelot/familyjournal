@@ -1,6 +1,6 @@
 import { pgTable, uuid, text, date, timestamp, integer, varchar, pgEnum } from "drizzle-orm/pg-core";
 
-export const childEnum = pgEnum("child", ["asher", "aiden", "family"]);
+export const childEnum = pgEnum("child", ["asher", "aiden", "family", "both"]);
 
 export const entries = pgTable("entries", {
   id: uuid("id").defaultRandom().primaryKey(),

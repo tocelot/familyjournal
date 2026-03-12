@@ -168,6 +168,7 @@ export default function EntryDetailPage() {
               <option value="asher">Asher</option>
               <option value="aiden">Aiden</option>
               <option value="family">Family</option>
+              <option value="both">Both Boys</option>
             </select>
             <textarea
               value={editDesc}

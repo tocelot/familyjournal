@@ -6,7 +6,7 @@ import { entries, photos } from "@/db/schema";
 import { eq, sql, desc, or } from "drizzle-orm";
 
 type JournalInfo = {
-  child: "asher" | "aiden" | "family";
+  child: "asher" | "aiden" | "family" | "both";
   label: string;
   subtitle: string;
   color: string;
@@ -44,7 +44,10 @@ async function getJournalInfo(): Promise<JournalInfo[]> {
 
   try {
     for (const journal of journals) {
-      const condition = eq(entries.child, journal.child);
+      const condition =
+        journal.child === "both"
+          ? eq(entries.child, "both")
+          : or(eq(entries.child, journal.child), eq(entries.child, "both"));
 
       const [countResult] = await db
         .select({ count: sql<number>`count(*)` })

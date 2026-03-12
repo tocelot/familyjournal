@@ -1,6 +1,6 @@
 import { z } from "zod/v4";
 
-export const childValues = ["asher", "aiden", "family"] as const;
+export const childValues = ["asher", "aiden", "family", "both"] as const;
 export type Child = (typeof childValues)[number];
 
 const mediaInputSchema = z.object({

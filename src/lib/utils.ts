@@ -21,6 +21,8 @@ export function childLabel(child: string): string {
       return "Aiden's Journal";
     case "family":
       return "Family Journal";
+    case "both":
+      return "Both Boys";
     default:
       return "Journal";
   }

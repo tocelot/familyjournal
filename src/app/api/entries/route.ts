@@ -99,7 +99,9 @@ export async function GET(request: NextRequest) {
   const { child, from, to, search, page, limit, sort } = parsed.data;
 
   const conditions = [
-    eq(entries.child, child),
+    child === "both"
+      ? eq(entries.child, "both")
+      : or(eq(entries.child, child), eq(entries.child, "both")),
   ];
 
   if (from) conditions.push(gte(entries.entryDate, from));
