@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-cream: #faf6f1;
+  --color-cream-dark: #f0e8dd;
+  --color-amber: #d97706;
+  --color-amber-light: #fbbf24;
+  --color-terracotta: #c2410c;
+  --color-sage: #6b7c5e;
+  --color-sage-light: #a3b18a;
+  --color-brown: #78552b;
+  --color-brown-light: #a67c52;
+  --color-brown-dark: #5c3d1e;
+  --color-warm-white: #fffbf5;
+  --color-warm-gray: #8b7e74;
+  --font-hand: "Caveat", cursive;
+  --font-body: "Inter", sans-serif;
+}
+
+body {
+  background: var(--color-cream);
+  color: #3d3028;
+  font-family: var(--font-body);
+}
+
+.paper-texture {
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(210, 190, 165, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(210, 190, 165, 0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(210, 190, 165, 0.12) 0%, transparent 50%);
+  background-color: var(--color-cream);
+}
+
+.photo-frame {
+  background: white;
+  padding: 8px 8px 28px 8px;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.1),
+    0 1px 3px rgba(0, 0, 0, 0.08);
+  transform: rotate(-1deg);
+  transition: transform 0.2s ease;
+}
+
+.photo-frame:nth-child(even) {
+  transform: rotate(1.5deg);
+}
+
+.photo-frame:hover {
+  transform: rotate(0deg) scale(1.02);
+}
+
+.tape {
+  position: relative;
+}
+
+.tape::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-2deg);
+  width: 60px;
+  height: 22px;
+  background: rgba(210, 190, 140, 0.6);
+  border-radius: 2px;
+  z-index: 1;
+}
+
+.journal-cover {
+  background: linear-gradient(135deg, var(--color-brown) 0%, var(--color-brown-dark) 100%);
+  border-radius: 4px 12px 12px 4px;
+  box-shadow:
+    4px 4px 12px rgba(0, 0, 0, 0.2),
+    inset -2px 0 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.journal-cover::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 20px;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.15) 0%, transparent 100%);
+}
+
+.scrapbook-card {
+  background: var(--color-warm-white);
+  border-radius: 8px;
+  box-shadow:
+    0 2px 8px rgba(120, 85, 43, 0.1),
+    0 1px 3px rgba(120, 85, 43, 0.06);
+  border: 1px solid rgba(210, 190, 165, 0.3);
+}
