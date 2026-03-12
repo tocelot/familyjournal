@@ -15,7 +15,7 @@ const funnelSans = Funnel_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Lai Family Logbook",
+  title: "Lai Family Scrapbook",
   description: "A family scrapbook for Asher and Aiden",
 };
 

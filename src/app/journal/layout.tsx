@@ -12,7 +12,7 @@ export default function JournalLayout({
           href="/"
           className="font-[family-name:var(--font-hand)] text-[26px] text-[#D4916E]"
         >
-          Lai Family Logbook
+          Lai Family Scrapbook
         </Link>
         <form action="/api/auth/logout" method="POST">
           <button

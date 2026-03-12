@@ -94,7 +94,7 @@ export default async function LandingPage() {
       {/* Nav bar */}
       <nav className="relative z-10 flex items-center justify-between px-12 py-4">
         <span className="font-[family-name:var(--font-hand)] text-[26px] text-[#D4916E]">
-          Lai Family Logbook
+          Lai Family Scrapbook
         </span>
         {isLoggedIn && (
           <form action="/api/auth/logout" method="POST">
@@ -109,11 +109,11 @@ export default async function LandingPage() {
       </nav>
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col items-center gap-12 px-4 py-16 md:py-24">
+      <div className="relative z-10 flex flex-col items-center gap-10 px-4 py-6 md:py-10">
         {/* Title section */}
         <div className="flex flex-col items-center gap-3">
           <h1 className="font-[family-name:var(--font-hand)] text-5xl text-[#D4916E] md:text-[68px] md:leading-[1.1]">
-            Lai Family Logbook
+            Lai Family Scrapbook
           </h1>
           <div className="h-[2px] w-12 rounded-full bg-[#D4916E]" />
           <p className="text-base text-[#6B6B6B]">
