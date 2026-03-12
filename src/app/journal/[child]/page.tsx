@@ -145,9 +145,25 @@ export default function TimelinePage() {
                     <video
                       src={entry.thumbnail_url}
                       muted
+                      loop
                       playsInline
+                      autoPlay
                       preload="metadata"
                       className="w-full object-cover"
+                      ref={(el) => {
+                        if (!el) return;
+                        const observer = new IntersectionObserver(
+                          ([e]) => {
+                            if (e.isIntersecting) {
+                              el.play().catch(() => {});
+                            } else {
+                              el.pause();
+                            }
+                          },
+                          { threshold: 0.5 }
+                        );
+                        observer.observe(el);
+                      }}
                     />
                   ) : (
                     <img
