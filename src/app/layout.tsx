@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Caveat, Inter } from "next/font/google";
+import { Caveat, Funnel_Sans } from "next/font/google";
 import "./globals.css";
 
 const caveat = Caveat({
@@ -8,7 +8,7 @@ const caveat = Caveat({
   display: "swap",
 });
 
-const inter = Inter({
+const funnelSans = Funnel_Sans({
   variable: "--font-body",
   subsets: ["latin"],
   display: "swap",
@@ -26,7 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${caveat.variable} ${inter.variable} antialiased`}>
+      <body className={`${caveat.variable} ${funnelSans.variable} antialiased`}>
         {children}
       </body>
     </html>
