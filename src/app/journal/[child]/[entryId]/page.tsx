@@ -35,6 +35,7 @@ export default function EntryDetailPage() {
   const [editChild, setEditChild] = useState("");
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [rotating, setRotating] = useState<string | null>(null);
 
   useEffect(() => {
     fetch(`/api/entries/${entryId}`)
@@ -77,6 +78,29 @@ export default function EntryDetailPage() {
       if (updated.child !== child) {
         router.push(`/journal/${updated.child}/${entryId}`);
       }
+    }
+  }
+
+  async function handleRotate(photoId: string) {
+    setRotating(photoId);
+    try {
+      const res = await fetch(`/api/photos/${photoId}/rotate`, { method: "POST" });
+      if (res.ok) {
+        const updated = await res.json();
+        setEntry((prev) => {
+          if (!prev) return null;
+          return {
+            ...prev,
+            photos: prev.photos.map((p) =>
+              p.id === photoId ? { ...p, blob_url: updated.blob_url } : p
+            ),
+          };
+        });
+      }
+    } catch (err) {
+      console.error("Failed to rotate:", err);
+    } finally {
+      setRotating(null);
     }
   }
 
@@ -191,17 +215,33 @@ export default function EntryDetailPage() {
             {entry.photos.length > 0 && (
               <div className="mt-6 flex flex-wrap gap-4">
                 {entry.photos.map((photo, i) => (
-                  <button
-                    key={photo.id}
-                    onClick={() => setLightboxIndex(i)}
-                    className="photo-frame tape cursor-pointer"
-                  >
-                    <img
-                      src={photo.blob_url}
-                      alt=""
-                      className="h-48 w-auto max-w-xs object-cover sm:h-64"
-                    />
-                  </button>
+                  <div key={photo.id} className="relative">
+                    <button
+                      onClick={() => setLightboxIndex(i)}
+                      className="photo-frame tape cursor-pointer"
+                    >
+                      <img
+                        src={photo.blob_url}
+                        alt=""
+                        className="h-48 w-auto max-w-xs object-cover sm:h-64"
+                      />
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRotate(photo.id);
+                      }}
+                      disabled={rotating === photo.id}
+                      className="absolute -right-2 -top-2 flex h-8 w-8 items-center justify-center rounded-full bg-brown/80 text-cream shadow-md transition-colors hover:bg-brown-dark disabled:opacity-50"
+                      title="Rotate photo"
+                    >
+                      {rotating === photo.id ? (
+                        <span className="animate-spin text-sm">⟳</span>
+                      ) : (
+                        <span className="text-sm">↻</span>
+                      )}
+                    </button>
+                  </div>
                 ))}
               </div>
             )}
