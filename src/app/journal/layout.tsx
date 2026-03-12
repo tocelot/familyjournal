@@ -6,28 +6,24 @@ export default function JournalLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="paper-texture min-h-screen">
-      <nav className="sticky top-0 z-50 border-b border-cream-dark bg-cream/95 backdrop-blur-sm">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-          <Link
-            href="/"
-            className="font-[family-name:var(--font-hand)] text-2xl text-brown-dark transition-colors hover:text-brown"
+    <div className="min-h-screen bg-[#F3EBE2]">
+      <nav className="flex items-center justify-between px-4 py-4 md:px-12">
+        <Link
+          href="/"
+          className="font-[family-name:var(--font-hand)] text-[26px] text-[#D4916E]"
+        >
+          Lai Family Logbook
+        </Link>
+        <form action="/api/auth/logout" method="POST">
+          <button
+            type="submit"
+            className="text-sm text-[#6B6B6B] transition-colors hover:text-[#1A1A1A]"
           >
-            Lai Family Logbook
-          </Link>
-
-          <form action="/api/auth/logout" method="POST">
-            <button
-              type="submit"
-              className="rounded-lg px-3 py-1.5 text-sm text-warm-gray transition-colors hover:bg-cream-dark hover:text-brown-dark"
-            >
-              Log out
-            </button>
-          </form>
-        </div>
+            Log out
+          </button>
+        </form>
       </nav>
-
-      <main className="mx-auto max-w-5xl px-4 py-8">{children}</main>
+      <main className="mx-auto max-w-6xl px-4 pb-16 md:px-12">{children}</main>
     </div>
   );
 }
