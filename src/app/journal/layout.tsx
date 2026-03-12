@@ -13,7 +13,7 @@ export default function JournalLayout({
             href="/"
             className="font-[family-name:var(--font-hand)] text-2xl text-brown-dark transition-colors hover:text-brown"
           >
-            Growing Up Journal
+            Lai Family Logbook
           </Link>
 
           <form action="/api/auth/logout" method="POST">

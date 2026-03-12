@@ -65,7 +65,7 @@ export default function LoginPage() {
       <div className="scrapbook-card w-full max-w-sm p-8">
         <div className="mb-6 text-center">
           <h1 className="font-[family-name:var(--font-hand)] text-4xl text-brown-dark">
-            Growing Up Journal
+            Lai Family Logbook
           </h1>
           <p className="mt-2 text-sm text-warm-gray">
             Enter the family password to continue

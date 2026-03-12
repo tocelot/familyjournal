@@ -89,7 +89,7 @@ export default async function LandingPage() {
   return (
     <div className="paper-texture flex min-h-screen flex-col items-center px-4 py-12">
       <h1 className="font-[family-name:var(--font-hand)] text-5xl text-brown-dark md:text-6xl">
-        Growing Up Journal
+        Lai Family Logbook
       </h1>
       <p className="mt-3 text-warm-gray">Pick a journal to start reading</p>
 

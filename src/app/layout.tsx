@@ -15,7 +15,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Growing Up Journal",
+  title: "Lai Family Logbook",
   description: "A family scrapbook for Asher and Aiden",
 };
 
