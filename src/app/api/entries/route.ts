@@ -46,12 +46,15 @@ export async function POST(request: NextRequest) {
         entryDate: entry_date,
       });
 
+      const mediaType = photo.content_type.startsWith("video/") ? "video" : "image";
+
       const [savedPhoto] = await db
         .insert(photos)
         .values({
           entryId: entry.id,
           blobUrl: url,
           blobPathname: pathname,
+          mediaType,
           sortOrder: i,
         })
         .returning();
@@ -59,6 +62,7 @@ export async function POST(request: NextRequest) {
       uploadedPhotos.push({
         id: savedPhoto.id,
         blob_url: savedPhoto.blobUrl,
+        media_type: savedPhoto.mediaType,
         sort_order: savedPhoto.sortOrder,
       });
     }
@@ -143,12 +147,15 @@ export async function GET(request: NextRequest) {
 
   const responseEntries = entryRows.map((entry) => {
     const entryPhotos = photosByEntry.get(entry.id) || [];
+    // For thumbnail, prefer an image over a video
+    const thumbnail = entryPhotos.find(p => p.mediaType === "image") || entryPhotos[0];
     return {
       id: entry.id,
       child: entry.child,
       description: entry.description,
       entry_date: entry.entryDate,
-      thumbnail_url: entryPhotos[0]?.blobUrl || null,
+      thumbnail_url: thumbnail?.blobUrl || null,
+      thumbnail_media_type: thumbnail?.mediaType || null,
       photo_count: entryPhotos.length,
       created_at: entry.createdAt,
     };

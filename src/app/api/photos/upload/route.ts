@@ -43,12 +43,15 @@ export async function POST(request: NextRequest) {
     entryDate: entry.entryDate,
   });
 
+  const mediaType = content_type.startsWith("video/") ? "video" : "image";
+
   const [savedPhoto] = await db
     .insert(photos)
     .values({
       entryId: entry_id,
       blobUrl: url,
       blobPathname: pathname,
+      mediaType,
       sortOrder: Number(maxOrder.max) + 1,
     })
     .returning();
@@ -58,6 +61,7 @@ export async function POST(request: NextRequest) {
       id: savedPhoto.id,
       entry_id: savedPhoto.entryId,
       blob_url: savedPhoto.blobUrl,
+      media_type: savedPhoto.mediaType,
       sort_order: savedPhoto.sortOrder,
     },
     { status: 201 }

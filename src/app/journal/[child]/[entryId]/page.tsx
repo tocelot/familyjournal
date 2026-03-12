@@ -8,6 +8,7 @@ import { formatDate, childLabel } from "@/lib/utils";
 type Photo = {
   id: string;
   blob_url: string;
+  media_type: string;
   sort_order: number;
 };
 
@@ -216,31 +217,43 @@ export default function EntryDetailPage() {
               <div className="mt-6 space-y-4">
                 {entry.photos.map((photo, i) => (
                   <div key={photo.id} className="relative">
-                    <button
-                      onClick={() => setLightboxIndex(i)}
-                      className="block w-full cursor-pointer overflow-hidden rounded-lg"
-                    >
-                      <img
+                    {photo.media_type === "video" ? (
+                      <video
                         src={photo.blob_url}
-                        alt=""
-                        className="w-full object-contain"
+                        controls
+                        playsInline
+                        preload="metadata"
+                        className="w-full rounded-lg"
                       />
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleRotate(photo.id);
-                      }}
-                      disabled={rotating === photo.id}
-                      className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-brown/80 text-cream shadow-md transition-colors hover:bg-brown-dark disabled:opacity-50"
-                      title="Rotate photo"
-                    >
-                      {rotating === photo.id ? (
-                        <span className="animate-spin text-sm">⟳</span>
-                      ) : (
-                        <span className="text-sm">↻</span>
-                      )}
-                    </button>
+                    ) : (
+                      <button
+                        onClick={() => setLightboxIndex(i)}
+                        className="block w-full cursor-pointer overflow-hidden rounded-lg"
+                      >
+                        <img
+                          src={photo.blob_url}
+                          alt=""
+                          className="w-full object-contain"
+                        />
+                      </button>
+                    )}
+                    {photo.media_type !== "video" && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleRotate(photo.id);
+                        }}
+                        disabled={rotating === photo.id}
+                        className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-brown/80 text-cream shadow-md transition-colors hover:bg-brown-dark disabled:opacity-50"
+                        title="Rotate photo"
+                      >
+                        {rotating === photo.id ? (
+                          <span className="animate-spin text-sm">⟳</span>
+                        ) : (
+                          <span className="text-sm">↻</span>
+                        )}
+                      </button>
+                    )}
                   </div>
                 ))}
               </div>

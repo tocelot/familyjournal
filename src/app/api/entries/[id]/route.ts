@@ -36,6 +36,7 @@ export async function GET(
     photos: entryPhotos.map((p) => ({
       id: p.id,
       blob_url: p.blobUrl,
+      media_type: p.mediaType || "image",
       sort_order: p.sortOrder,
     })),
     created_at: entry.createdAt,

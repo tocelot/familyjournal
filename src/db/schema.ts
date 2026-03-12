@@ -18,6 +18,7 @@ export const photos = pgTable("photos", {
     .notNull(),
   blobUrl: varchar("blob_url", { length: 500 }).notNull(),
   blobPathname: varchar("blob_pathname", { length: 500 }).notNull(),
+  mediaType: varchar("media_type", { length: 10 }).notNull().default("image"),
   sortOrder: integer("sort_order").notNull().default(0),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
 });

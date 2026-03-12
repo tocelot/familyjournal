@@ -11,6 +11,7 @@ type EntryPreview = {
   description: string;
   entry_date: string;
   thumbnail_url: string | null;
+  thumbnail_media_type: string | null;
   photo_count: number;
   created_at: string;
 };
@@ -140,14 +141,29 @@ export default function TimelinePage() {
 
               {entry.thumbnail_url && (
                 <div className="relative mt-4 overflow-hidden rounded-lg">
-                  <img
-                    src={entry.thumbnail_url}
-                    alt=""
-                    className="w-full object-cover"
-                  />
+                  {entry.thumbnail_media_type === "video" ? (
+                    <video
+                      src={entry.thumbnail_url}
+                      muted
+                      playsInline
+                      preload="metadata"
+                      className="w-full object-cover"
+                    />
+                  ) : (
+                    <img
+                      src={entry.thumbnail_url}
+                      alt=""
+                      className="w-full object-cover"
+                    />
+                  )}
                   {entry.photo_count > 1 && (
                     <span className="absolute bottom-2 right-2 rounded-full bg-brown/80 px-2 py-0.5 text-xs text-cream">
                       +{entry.photo_count - 1} more
+                    </span>
+                  )}
+                  {entry.thumbnail_media_type === "video" && (
+                    <span className="absolute left-2 top-2 rounded-full bg-brown/80 px-2 py-0.5 text-xs text-cream">
+                      🎬 Video
                     </span>
                   )}
                 </div>

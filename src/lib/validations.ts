@@ -3,17 +3,17 @@ import { z } from "zod/v4";
 export const childValues = ["asher", "aiden", "family"] as const;
 export type Child = (typeof childValues)[number];
 
-const photoInputSchema = z.object({
-  data: z.string().min(1, "Photo data is required"),
+const mediaInputSchema = z.object({
+  data: z.string().min(1, "Media data is required"),
   filename: z.string().min(1, "Filename is required"),
-  content_type: z.string().regex(/^image\//, "Must be an image content type"),
+  content_type: z.string().regex(/^(image|video)\//, "Must be an image or video content type"),
 });
 
 export const createEntrySchema = z.object({
   child: z.enum(childValues),
   description: z.string().default(""),
   entry_date: z.iso.date("Must be a valid ISO date (YYYY-MM-DD)"),
-  photos: z.array(photoInputSchema).optional(),
+  photos: z.array(mediaInputSchema).optional(),
 });
 
 export const updateEntrySchema = z.object({
@@ -24,9 +24,9 @@ export const updateEntrySchema = z.object({
 
 export const uploadPhotoSchema = z.object({
   entry_id: z.uuid("Must be a valid UUID"),
-  data: z.string().min(1, "Photo data is required"),
+  data: z.string().min(1, "Media data is required"),
   filename: z.string().min(1, "Filename is required"),
-  content_type: z.string().regex(/^image\//, "Must be an image content type"),
+  content_type: z.string().regex(/^(image|video)\//, "Must be an image or video content type"),
 });
 
 export const listEntriesSchema = z.object({
