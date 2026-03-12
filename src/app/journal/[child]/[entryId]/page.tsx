@@ -213,17 +213,17 @@ export default function EntryDetailPage() {
             </div>
 
             {entry.photos.length > 0 && (
-              <div className="mt-6 flex flex-wrap gap-4">
+              <div className="mt-6 space-y-4">
                 {entry.photos.map((photo, i) => (
                   <div key={photo.id} className="relative">
                     <button
                       onClick={() => setLightboxIndex(i)}
-                      className="photo-frame tape cursor-pointer"
+                      className="block w-full cursor-pointer overflow-hidden rounded-lg"
                     >
                       <img
                         src={photo.blob_url}
                         alt=""
-                        className="h-48 w-auto max-w-xs object-cover sm:h-64"
+                        className="w-full object-contain"
                       />
                     </button>
                     <button
@@ -232,7 +232,7 @@ export default function EntryDetailPage() {
                         handleRotate(photo.id);
                       }}
                       disabled={rotating === photo.id}
-                      className="absolute -right-2 -top-2 flex h-8 w-8 items-center justify-center rounded-full bg-brown/80 text-cream shadow-md transition-colors hover:bg-brown-dark disabled:opacity-50"
+                      className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-brown/80 text-cream shadow-md transition-colors hover:bg-brown-dark disabled:opacity-50"
                       title="Rotate photo"
                     >
                       {rotating === photo.id ? (
