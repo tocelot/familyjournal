@@ -64,7 +64,7 @@ const SEED_ENTRIES = [
 ];
 
 async function seed() {
-  const databaseUrl = process.env.DATABASE_URL;
+  const databaseUrl = process.env.POSTGRES_URL;
   if (!databaseUrl) {
     console.error("DATABASE_URL is not set. Set it in .env.local or as an environment variable.");
     process.exit(1);
