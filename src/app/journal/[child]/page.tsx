@@ -139,14 +139,14 @@ export default function TimelinePage() {
               </p>
 
               {entry.thumbnail_url && (
-                <div className="photo-frame mt-4 inline-block">
+                <div className="relative mt-4 overflow-hidden rounded-lg">
                   <img
                     src={entry.thumbnail_url}
                     alt=""
-                    className="h-48 w-full object-cover sm:h-56"
+                    className="w-full object-cover"
                   />
                   {entry.photo_count > 1 && (
-                    <span className="absolute bottom-1 right-2 rounded-full bg-brown/80 px-2 py-0.5 text-xs text-cream">
+                    <span className="absolute bottom-2 right-2 rounded-full bg-brown/80 px-2 py-0.5 text-xs text-cream">
                       +{entry.photo_count - 1} more
                     </span>
                   )}
