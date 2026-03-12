@@ -118,23 +118,30 @@ export default function EntryDetailPage() {
 
   if (loading) {
     return (
-      <div className="scrapbook-card animate-pulse p-8">
-        <div className="h-6 w-48 rounded bg-cream-dark" />
-        <div className="mt-6 h-64 rounded bg-cream-dark" />
-        <div className="mt-4 h-4 w-3/4 rounded bg-cream-dark" />
+      <div className="animate-pulse">
+        <div className="h-4 w-48 rounded bg-[#E8E0D6]" />
+        <div className="mt-6 h-[300px] rounded-[20px] bg-[#E8E0D6] md:h-[480px]" />
+        <div className="max-w-[680px] space-y-4 pt-8">
+          <div className="h-3 w-40 rounded bg-[#E8E0D6]" />
+          <div className="h-6 w-64 rounded bg-[#E8E0D6]" />
+          <div className="space-y-2">
+            <div className="h-4 w-full rounded bg-[#E8E0D6]" />
+            <div className="h-4 w-3/4 rounded bg-[#E8E0D6]" />
+          </div>
+        </div>
       </div>
     );
   }
 
   if (!entry) {
     return (
-      <div className="py-20 text-center">
-        <p className="font-[family-name:var(--font-hand)] text-3xl text-warm-gray">
+      <div className="mt-20 text-center">
+        <p className="font-[family-name:var(--font-hand)] text-3xl text-[#C5BEB6]">
           Memory not found
         </p>
         <Link
           href={`/journal/${child}`}
-          className="mt-4 inline-block text-amber hover:underline"
+          className="mt-4 inline-block text-sm text-[#D4916E] hover:underline"
         >
           Back to {childLabel(child)}
         </Link>
@@ -144,147 +151,182 @@ export default function EntryDetailPage() {
 
   return (
     <div>
+      {/* Back link */}
       <Link
         href={`/journal/${child}`}
-        className="mb-6 inline-flex items-center gap-1 text-sm text-warm-gray hover:text-brown-dark"
+        className="inline-flex items-center gap-1.5 text-sm text-[#6B6B6B] transition-colors hover:text-[#1A1A1A]"
       >
-        &larr; Back to {childLabel(child)}
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="m12 19-7-7 7-7" />
+          <path d="M19 12H5" />
+        </svg>
+        Back to {childLabel(child)}
       </Link>
 
-      <div className="scrapbook-card p-6 sm:p-8">
-        {editing ? (
-          <div className="space-y-4">
-            <input
-              type="date"
-              value={editDate}
-              onChange={(e) => setEditDate(e.target.value)}
-              className="rounded-lg border border-cream-dark bg-cream/50 px-3 py-2 text-brown-dark focus:border-amber focus:outline-none"
-            />
-            <select
-              value={editChild}
-              onChange={(e) => setEditChild(e.target.value)}
-              className="ml-3 rounded-lg border border-cream-dark bg-cream/50 px-3 py-2 text-brown-dark focus:border-amber focus:outline-none"
+      {/* Photos */}
+      {entry.photos.length > 0 && (
+        <div className="mt-6 space-y-4">
+          {entry.photos.map((photo, i) => (
+            <div
+              key={photo.id}
+              className="relative h-[300px] overflow-hidden rounded-[20px] md:h-[480px]"
             >
-              <option value="asher">Asher</option>
-              <option value="aiden">Aiden</option>
-              <option value="family">Family</option>
-              <option value="both">Both Boys</option>
-            </select>
+              {photo.media_type === "video" ? (
+                <video
+                  src={photo.blob_url}
+                  controls
+                  playsInline
+                  preload="metadata"
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <button
+                  onClick={() => setLightboxIndex(i)}
+                  className="block h-full w-full cursor-pointer"
+                >
+                  <img
+                    src={photo.blob_url}
+                    alt=""
+                    className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+                  />
+                </button>
+              )}
+
+              {/* Rotate button */}
+              {photo.media_type !== "video" && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleRotate(photo.id);
+                  }}
+                  disabled={rotating === photo.id}
+                  className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-[#1A1A1A]/50 text-white transition-colors hover:bg-[#1A1A1A]/70 disabled:opacity-50"
+                  title="Rotate photo"
+                >
+                  {rotating === photo.id ? (
+                    <svg className="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
+                      <path d="M21 3v5h-5" />
+                    </svg>
+                  ) : (
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
+                      <path d="M21 3v5h-5" />
+                    </svg>
+                  )}
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Entry content */}
+      <div className="max-w-[680px] pt-8">
+        {editing ? (
+          <div className="space-y-5">
+            <div className="flex flex-wrap gap-3">
+              <input
+                type="date"
+                value={editDate}
+                onChange={(e) => setEditDate(e.target.value)}
+                className="h-11 rounded-[10px] border border-[#C5BEB6] bg-white px-4 text-sm text-[#3D3D3D] focus:border-[#D4916E] focus:outline-none focus:ring-2 focus:ring-[#D4916E]/20"
+              />
+              <select
+                value={editChild}
+                onChange={(e) => setEditChild(e.target.value)}
+                className="h-11 appearance-none rounded-[10px] border border-[#C5BEB6] bg-white pl-4 pr-10 text-sm text-[#3D3D3D] focus:border-[#D4916E] focus:outline-none"
+              >
+                <option value="asher">Asher</option>
+                <option value="aiden">Aiden</option>
+                <option value="family">Family</option>
+                <option value="both">Both Boys</option>
+              </select>
+            </div>
             <textarea
               value={editDesc}
               onChange={(e) => setEditDesc(e.target.value)}
-              rows={4}
-              className="w-full rounded-lg border border-cream-dark bg-cream/50 px-4 py-3 text-brown-dark focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/20"
+              rows={6}
+              className="w-full rounded-[10px] border border-[#C5BEB6] bg-white px-4 py-3 text-base leading-[1.7] text-[#3D3D3D] placeholder:text-[#C5BEB6] focus:border-[#D4916E] focus:outline-none focus:ring-2 focus:ring-[#D4916E]/20"
             />
             <div className="flex gap-3">
               <button
                 onClick={handleSave}
-                className="rounded-lg bg-brown px-4 py-2 text-sm font-medium text-cream hover:bg-brown-dark"
+                className="rounded-[10px] bg-[#D4916E] px-5 py-2.5 text-sm font-bold text-white transition-colors hover:bg-[#C07A5A]"
               >
                 Save
               </button>
               <button
-                onClick={() => setEditing(false)}
-                className="rounded-lg border border-cream-dark px-4 py-2 text-sm text-brown-dark hover:bg-cream-dark"
+                onClick={() => {
+                  setEditing(false);
+                  setEditDesc(entry.description);
+                  setEditDate(entry.entry_date);
+                  setEditChild(entry.child);
+                }}
+                className="rounded-[10px] border border-[#C5BEB6] px-5 py-2.5 text-sm text-[#3D3D3D] transition-colors hover:border-[#3D3D3D]"
               >
                 Cancel
               </button>
             </div>
           </div>
         ) : (
-          <>
-            <div className="flex items-start justify-between">
-              <p className="font-[family-name:var(--font-hand)] text-3xl text-amber">
+          <div className="space-y-5">
+            {/* Date + Actions row */}
+            <div className="flex items-center justify-between">
+              <span className="text-[13px] font-medium uppercase tracking-[1px] text-[#D4916E]">
                 {formatDate(entry.entry_date)}
-              </p>
-              <div className="flex gap-2">
+              </span>
+              <div className="flex items-center gap-4">
                 <button
                   onClick={() => setEditing(true)}
-                  className="rounded-lg border border-cream-dark px-3 py-1.5 text-sm text-brown-dark hover:bg-cream-dark"
+                  className="flex items-center gap-1.5 rounded-lg border border-[#C5BEB6] px-4 py-2 text-[13px] font-medium text-[#3D3D3D] transition-colors hover:border-[#3D3D3D]"
                 >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+                    <path d="m15 5 4 4" />
+                  </svg>
                   Edit
                 </button>
                 <button
                   onClick={handleDelete}
                   disabled={deleting}
-                  className="rounded-lg border border-terracotta/30 px-3 py-1.5 text-sm text-terracotta hover:bg-terracotta/10"
+                  className="text-[13px] text-[#C5BEB6] transition-colors hover:text-red-400"
                 >
                   {deleting ? "Deleting..." : "Delete"}
                 </button>
               </div>
             </div>
 
-            {entry.photos.length > 0 && (
-              <div className="mt-6 space-y-4">
-                {entry.photos.map((photo, i) => (
-                  <div key={photo.id} className="relative">
-                    {photo.media_type === "video" ? (
-                      <video
-                        src={photo.blob_url}
-                        controls
-                        playsInline
-                        preload="metadata"
-                        className="w-full rounded-lg"
-                      />
-                    ) : (
-                      <button
-                        onClick={() => setLightboxIndex(i)}
-                        className="block w-full cursor-pointer overflow-hidden rounded-lg"
-                      >
-                        <img
-                          src={photo.blob_url}
-                          alt=""
-                          className="w-full object-contain"
-                        />
-                      </button>
-                    )}
-                    {photo.media_type !== "video" && (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleRotate(photo.id);
-                        }}
-                        disabled={rotating === photo.id}
-                        className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-brown/80 text-cream shadow-md transition-colors hover:bg-brown-dark disabled:opacity-50"
-                        title="Rotate photo"
-                      >
-                        {rotating === photo.id ? (
-                          <span className="animate-spin text-sm">⟳</span>
-                        ) : (
-                          <span className="text-sm">↻</span>
-                        )}
-                      </button>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-
+            {/* Description */}
             {entry.description && (
-              <p className="mt-6 text-lg leading-relaxed text-brown-dark/90">
+              <p className="whitespace-pre-wrap text-base leading-[1.7] text-[#3D3D3D]">
                 {entry.description}
               </p>
             )}
-          </>
+          </div>
         )}
       </div>
 
+      {/* Lightbox */}
       {lightboxIndex !== null && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
           onClick={() => setLightboxIndex(null)}
         >
           <button
-            className="absolute right-4 top-4 text-3xl text-white/80 hover:text-white"
+            className="absolute right-5 top-5 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
             onClick={() => setLightboxIndex(null)}
           >
-            &times;
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 6 6 18" />
+              <path d="m6 6 12 12" />
+            </svg>
           </button>
 
           {entry.photos.length > 1 && (
             <>
               <button
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-4xl text-white/80 hover:text-white"
+                className="absolute left-4 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
                 onClick={(e) => {
                   e.stopPropagation();
                   setLightboxIndex(
@@ -292,16 +334,20 @@ export default function EntryDetailPage() {
                   );
                 }}
               >
-                &lsaquo;
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="m15 18-6-6 6-6" />
+                </svg>
               </button>
               <button
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-4xl text-white/80 hover:text-white"
+                className="absolute right-4 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
                 onClick={(e) => {
                   e.stopPropagation();
                   setLightboxIndex((lightboxIndex + 1) % entry.photos.length);
                 }}
               >
-                &rsaquo;
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="m9 18 6-6-6-6" />
+                </svg>
               </button>
             </>
           )}
@@ -309,7 +355,7 @@ export default function EntryDetailPage() {
           <img
             src={entry.photos[lightboxIndex].blob_url}
             alt=""
-            className="max-h-[90vh] max-w-[90vw] object-contain"
+            className="max-h-[90vh] max-w-[90vw] rounded-lg object-contain"
             onClick={(e) => e.stopPropagation()}
           />
         </div>
