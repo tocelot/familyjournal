@@ -17,8 +17,7 @@ export async function middleware(request: NextRequest) {
   }
 
   if (
-    API_KEY_PATHS.some((p) => pathname === p) &&
-    request.method === "POST" &&
+    API_KEY_PATHS.some((p) => pathname === p || pathname.startsWith(p + "/")) &&
     validateApiKey(request)
   ) {
     return NextResponse.next();
