@@ -3,14 +3,14 @@ import { db } from "@/db";
 import { entries, photos } from "@/db/schema";
 import { updateEntrySchema } from "@/lib/validations";
 import { deletePhoto as deleteBlobPhoto } from "@/lib/blob";
-import { requireSession } from "@/lib/auth-middleware";
+import { isAuthenticated } from "@/lib/auth-middleware";
 import { eq, asc } from "drizzle-orm";
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const authenticated = await requireSession(request);
+  const authenticated = await isAuthenticated(request);
   if (!authenticated) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
@@ -48,7 +48,7 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const authenticated = await requireSession(request);
+  const authenticated = await isAuthenticated(request);
   if (!authenticated) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
@@ -91,7 +91,7 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const authenticated = await requireSession(request);
+  const authenticated = await isAuthenticated(request);
   if (!authenticated) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
