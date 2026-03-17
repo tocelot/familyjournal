@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { formatDate, childLabel } from "@/lib/utils";
@@ -37,6 +37,23 @@ export default function EntryDetailPage() {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [rotating, setRotating] = useState<string | null>(null);
+  const [activeSlide, setActiveSlide] = useState(0);
+  const carouselRef = useRef<HTMLDivElement>(null);
+
+  const handleScroll = useCallback(() => {
+    const el = carouselRef.current;
+    if (!el) return;
+    const scrollLeft = el.scrollLeft;
+    const width = el.offsetWidth;
+    const index = Math.round(scrollLeft / width);
+    setActiveSlide(index);
+  }, []);
+
+  const scrollToSlide = useCallback((index: number) => {
+    const el = carouselRef.current;
+    if (!el) return;
+    el.scrollTo({ left: index * el.offsetWidth, behavior: "smooth" });
+  }, []);
 
   useEffect(() => {
     fetch(`/api/entries/${entryId}`)
@@ -163,61 +180,96 @@ export default function EntryDetailPage() {
         Back to {childLabel(child)}
       </Link>
 
-      {/* Photos */}
+      {/* Photos — carousel when multiple, single when one */}
       {entry.photos.length > 0 && (
-        <div className="mt-6 space-y-4">
-          {entry.photos.map((photo, i) => (
+        <div className="mt-6">
+          <div className="relative overflow-hidden rounded-[20px]">
+            {/* Scrollable carousel container */}
             <div
-              key={photo.id}
-              className="relative overflow-hidden rounded-[20px]"
+              ref={carouselRef}
+              onScroll={handleScroll}
+              className="flex snap-x snap-mandatory overflow-x-auto scrollbar-hide"
+              style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" }}
             >
-              {photo.media_type === "video" ? (
-                <video
-                  src={photo.blob_url}
-                  controls
-                  playsInline
-                  preload="metadata"
-                  className="w-full rounded-[20px] object-contain"
-                />
-              ) : (
-                <button
-                  onClick={() => setLightboxIndex(i)}
-                  className="block w-full cursor-pointer"
+              {entry.photos.map((photo, i) => (
+                <div
+                  key={photo.id}
+                  className="relative w-full flex-shrink-0 snap-center"
                 >
-                  <img
-                    src={photo.blob_url}
-                    alt=""
-                    className="w-full object-contain transition-transform duration-300 hover:scale-105"
-                  />
-                </button>
-              )}
-
-              {/* Rotate button */}
-              {photo.media_type !== "video" && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleRotate(photo.id);
-                  }}
-                  disabled={rotating === photo.id}
-                  className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-[#1A1A1A]/50 text-white transition-colors hover:bg-[#1A1A1A]/70 disabled:opacity-50"
-                  title="Rotate photo"
-                >
-                  {rotating === photo.id ? (
-                    <svg className="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
-                      <path d="M21 3v5h-5" />
-                    </svg>
+                  {photo.media_type === "video" ? (
+                    <video
+                      src={photo.blob_url}
+                      controls
+                      playsInline
+                      preload="metadata"
+                      className="w-full object-contain"
+                    />
                   ) : (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
-                      <path d="M21 3v5h-5" />
-                    </svg>
+                    <button
+                      onClick={() => setLightboxIndex(i)}
+                      className="block w-full cursor-pointer"
+                    >
+                      <img
+                        src={photo.blob_url}
+                        alt=""
+                        className="w-full object-contain"
+                      />
+                    </button>
                   )}
-                </button>
-              )}
+
+                  {/* Rotate button */}
+                  {photo.media_type !== "video" && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRotate(photo.id);
+                      }}
+                      disabled={rotating === photo.id}
+                      className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-[#1A1A1A]/50 text-white transition-colors hover:bg-[#1A1A1A]/70 disabled:opacity-50"
+                      title="Rotate photo"
+                    >
+                      {rotating === photo.id ? (
+                        <svg className="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
+                          <path d="M21 3v5h-5" />
+                        </svg>
+                      ) : (
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
+                          <path d="M21 3v5h-5" />
+                        </svg>
+                      )}
+                    </button>
+                  )}
+                </div>
+              ))}
             </div>
-          ))}
+
+            {/* Photo counter badge (top-right) */}
+            {entry.photos.length > 1 && (
+              <span className="absolute right-3 top-3 rounded-full bg-[#1A1A1A]/60 px-2.5 py-1 text-xs text-white pointer-events-none">
+                {activeSlide + 1} / {entry.photos.length}
+              </span>
+            )}
+          </div>
+
+          {/* Dot indicators */}
+          {entry.photos.length > 1 && (
+            <div className="mt-3 flex justify-center gap-1.5">
+              {entry.photos.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => scrollToSlide(i)}
+                  className={`h-2 w-2 rounded-full transition-all duration-200 ${
+                    i === activeSlide
+                      ? "bg-[#D4916E] scale-110"
+                      : "bg-[#C5BEB6]"
+                  }`}
+                  aria-label={`Go to photo ${i + 1}`}
+                />
+              ))}
+            </div>
+          )}
         </div>
       )}
 

@@ -23,6 +23,15 @@ body {
   font-family: var(--font-body);
 }
 
+/* Hide scrollbar for carousel */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 .paper-texture {
   background-image:
     radial-gradient(ellipse at 20% 50%, rgba(210, 190, 165, 0.15) 0%, transparent 50%),

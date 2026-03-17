@@ -85,20 +85,8 @@ export default function TimelinePage() {
 
   return (
     <div>
-      {/* Back link */}
-      <Link
-        href="/"
-        className="inline-flex items-center gap-1.5 text-sm text-[#6B6B6B] transition-colors hover:text-[#1A1A1A]"
-      >
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="m12 19-7-7 7-7" />
-          <path d="M19 12H5" />
-        </svg>
-        Back to journals
-      </Link>
-
       {/* Header row */}
-      <div className="mt-6 flex items-center justify-between">
+      <div className="flex items-center justify-between">
         <h1 className="text-4xl text-[#1A1A1A]" style={{ lineHeight: 1.1 }}>
           {label}
         </h1>
