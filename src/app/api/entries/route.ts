@@ -157,6 +157,12 @@ export async function GET(request: NextRequest) {
       thumbnail_url: thumbnail?.blobUrl || null,
       thumbnail_media_type: thumbnail?.mediaType || null,
       photo_count: entryPhotos.length,
+      photos: entryPhotos.map(p => ({
+        id: p.id,
+        blob_url: p.blobUrl,
+        media_type: p.mediaType || "image",
+        sort_order: p.sortOrder,
+      })),
       created_at: entry.createdAt,
     };
   });

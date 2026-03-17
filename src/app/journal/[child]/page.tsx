@@ -4,6 +4,14 @@ import { useState, useEffect, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { childLabel, formatDate, truncate } from "@/lib/utils";
+import PhotoCarousel from "@/components/PhotoCarousel";
+
+type PhotoItem = {
+  id: string;
+  blob_url: string;
+  media_type: string;
+  sort_order: number;
+};
 
 type EntryPreview = {
   id: string;
@@ -13,6 +21,7 @@ type EntryPreview = {
   thumbnail_url: string | null;
   thumbnail_media_type: string | null;
   photo_count: number;
+  photos: PhotoItem[];
   created_at: string;
 };
 
@@ -203,47 +212,8 @@ export default function TimelinePage() {
               >
                 {/* Photo area */}
                 {hasPhoto && (
-                  <div className="relative overflow-hidden md:flex-1">
-                    {entry.thumbnail_media_type === "video" ? (
-                      <video
-                        src={entry.thumbnail_url!}
-                        muted
-                        loop
-                        playsInline
-                        preload="metadata"
-                        className="w-full object-contain transition-transform duration-300 group-hover:scale-105"
-                        ref={(el) => {
-                          if (!el) return;
-                          const observer = new IntersectionObserver(
-                            ([e]) => {
-                              if (e.isIntersecting) {
-                                el.play().catch(() => {});
-                              } else {
-                                el.pause();
-                              }
-                            },
-                            { threshold: 0.5 }
-                          );
-                          observer.observe(el);
-                        }}
-                      />
-                    ) : (
-                      <img
-                        src={entry.thumbnail_url!}
-                        alt=""
-                        className="w-full object-contain transition-transform duration-300 group-hover:scale-105"
-                      />
-                    )}
-                    {entry.photo_count > 1 && (
-                      <span className="absolute bottom-3 right-3 rounded-full bg-[#1A1A1A]/60 px-2.5 py-1 text-xs text-white">
-                        +{entry.photo_count - 1} more
-                      </span>
-                    )}
-                    {entry.thumbnail_media_type === "video" && (
-                      <span className="absolute left-3 top-3 rounded-full bg-[#1A1A1A]/60 px-2.5 py-1 text-xs text-white">
-                        Video
-                      </span>
-                    )}
+                  <div className="relative overflow-hidden md:flex-1" onClick={(e) => { if (entry.photos.length > 1) e.stopPropagation(); }}>
+                    <PhotoCarousel photos={entry.photos} />
                   </div>
                 )}
 
