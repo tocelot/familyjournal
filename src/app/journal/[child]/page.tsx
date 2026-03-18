@@ -228,7 +228,7 @@ export default function TimelinePage() {
                   </span>
 
                   {entry.description && (
-                    <p className="truncate text-sm text-[#3D3D3D] md:text-[15px] md:leading-[1.6] md:[display:-webkit-box] md:[-webkit-line-clamp:3] md:[-webkit-box-orient:vertical] md:[white-space:normal]">
+                    <p className="text-sm text-[#3D3D3D] md:text-[15px] md:leading-[1.6]">
                       {entry.description}
                     </p>
                   )}
